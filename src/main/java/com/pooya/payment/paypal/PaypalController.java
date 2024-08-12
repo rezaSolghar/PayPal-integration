@@ -52,10 +52,22 @@ public class PaypalController {
             @RequestParam("payerId") String payerId
     ) {
         try {
-
+            Payment payment = paypalService.executePayment(paymentId, payerId);
+            if(payment.getState().equals("approved")) {
+                return "paymentSuccess";
+            }
+        } catch (PayPalRESTException e) {
+            throw new RuntimeException(e);
         }
         return "paymentSuccess";
     }
 
-
+    @GetMapping("payment/cancel")
+    public String paymentCancel() {
+        return "paymentCancel";
+    }
+    @GetMapping("payment/error")
+    public String paymentError() {
+        return "paymentError";
+    }
 }
